@@ -9,13 +9,12 @@ public class DescribeTypeJSONCache {
 	private static var typeCache:Object = {};
 
 	public static function describeType(o:*, flags:uint):Object {
-		var className:String;
 		var cacheKey:String;
 
 		if (o is String)
-			cacheKey = className = o;
+			cacheKey = o;
 		else
-			cacheKey = className = getQualifiedClassName(o);
+			cacheKey = getQualifiedClassName(o);
 
 		//Need separate entries for describeType(Foo) and describeType(myFoo)
 		if (o is Class)
@@ -48,14 +47,14 @@ public class DescribeTypeJSONCache {
 	public static const CLASS_FLAGS:uint = INCLUDE_INTERFACES | INCLUDE_VARIABLES
 			| INCLUDE_ACCESSORS | INCLUDE_METHODS | INCLUDE_METADATA | INCLUDE_TRAITS | HIDE_OBJECT;
 
-	public static function getInstanceDescription(type : Class) : Object
+	public static function getInstanceDescription($class : Class) : Object
 	{
-		return describeTypeJSON(type, INSTANCE_FLAGS);
+		return describeTypeJSON($class, INSTANCE_FLAGS);
 	}
 
-	public static function getClassDescription(type : Class) : Object
+	public static function getClassDescription($class : Class) : Object
 	{
-		return describeTypeJSON(type, CLASS_FLAGS);
+		return describeTypeJSON($class, CLASS_FLAGS);
 	}
 }
 

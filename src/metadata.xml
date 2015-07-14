@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<annotations version="1.0">
+	<metadata name="ValidationProperty"
+			  description="Provides additional info for smart VO reflections. Should only be set on variables or readwrite properties. Use either empty name or 'remoteName' attribute they have identical functionality. Attribute 'collectionElementType' can accept any Class but for convenient use it takes BaseVO Classes. Attribute 'initializer' is object's method: public function YOUR_NAME(source:*):PROPERTY_TYPE">
+
+		<context name="variable"/>
+		<context name="setter"/>
+
+		<attribute type="String"/>
+		<attribute name="remoteName" type="String"/>
+
+		<attribute name="collectionElementType"
+				   type="Class"
+				   hint="classes"
+				   hintType="com.trembit.reflections.vo.BaseVO"/>
+
+		<attribute name="initializer"
+				   type="String"
+				   hint="methods"/>
+	</metadata>
+
+	<metadata name="Ignored"
+			  description="Removes property from smart VO reflections">
+		<context name="variable" />
+		<context name="setter" />
+	</metadata>
+</annotations>
+

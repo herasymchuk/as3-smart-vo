@@ -2,9 +2,8 @@
    <compiler>
       <debug>false</debug>
       <keep-as3-metadata>
-         <name>Ignored</name>
-         <name>Transient</name>
          <name>RemoteProperty</name>
+         <name>Ignored</name>
       </keep-as3-metadata>
    </compiler>
 </flex-config>

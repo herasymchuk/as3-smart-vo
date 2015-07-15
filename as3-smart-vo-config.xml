@@ -1,7 +1,7 @@
 <flex-config>
    <compiler>
       <debug>false</debug>
-      <keep-as3-metadata>
+      <keep-as3-metadata append="true">
          <name>RemoteProperty</name>
          <name>Ignored</name>
       </keep-as3-metadata>

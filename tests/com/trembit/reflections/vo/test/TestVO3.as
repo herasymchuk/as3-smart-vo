@@ -7,5 +7,6 @@
 package com.trembit.reflections.vo.test {
 public class TestVO3 extends TestVO1{
 
+	public var testVO3Property:String = "SET";
 }
 }

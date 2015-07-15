@@ -12,6 +12,10 @@
           <sdk name="4.14.0.air-17.0" />
         </dependencies>
         <compiler-options>
+          <map>
+            <entry key="compiler.debug.swc" value="true" />
+            <entry key="metadata.creator" value="Maksym Gerasymchuk, Andrey Assaul" />
+          </map>
           <option name="filesToIncludeInSWC" value="$MODULE_DIR$/src/metadata.xml" />
           <option name="additionalConfigFilePath" value="$MODULE_DIR$/as3-smart-vo-config.xml" />
         </compiler-options>

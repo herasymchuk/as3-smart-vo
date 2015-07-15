@@ -121,5 +121,31 @@ public final class BaseVOTest {
 		Assert.assertNotNull(newVO);
 		Assert.assertTrue(vo.equals(newVO));
 	}
+
+	[Test]
+	public function testSynchronize():void {
+		var source:Object = getSource(1, 0xFFFF00, 36.5, "Hello World", new Date(), [
+			getSource(2, 0xFF0000, NaN, "T2", null, null, null, null, 0),
+			getSource(2, 0xFF0000, NaN, "T3", null, null, null, null, 1)
+		], [1, 2, 3], [
+			getSource(2, 0xFF0000, NaN, "T4", null, null, null, null, 1),
+			getSource(2, 0xFF0000, NaN, "T5", null, null, null, null, 0)], -1);
+		var syncData:TestVO1 = BaseVO.create(source, TestVO1);
+		syncData.testTrans = "HELLO";
+		var data:TestVO3 = new TestVO3();
+		data.synchronizeWith(syncData);
+		Assert.assertEquals(data.prop1, syncData.prop1);
+		Assert.assertEquals(data.prop2, syncData.prop2);
+		Assert.assertEquals(data.prop3, syncData.prop3);
+		Assert.assertEquals(data.prop4, syncData.prop4);
+		Assert.assertEquals(data.prop5, syncData.prop5);
+		Assert.assertEquals(data.prop6, syncData.prop6);
+		Assert.assertEquals(data.prop7, syncData.prop7);
+		Assert.assertEquals(data.prop8, syncData.prop8);
+		Assert.assertEquals(data.voType, syncData.voType);
+		Assert.assertEquals(data.testRemote, syncData.testRemote);
+		Assert.assertEquals(data.testInit, syncData.testInit);
+		Assert.assertNotNull(data.testVO3Property);
+	}
 }
 }

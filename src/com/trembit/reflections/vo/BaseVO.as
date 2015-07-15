@@ -45,6 +45,16 @@ public class BaseVO extends EventDispatcher{
         return item;
     }
 
+    public function synchronizeWith(source:*):void{
+        var properties:Vector.<PropertyDescriptorVO> = ReflectionUtil.getProperties(getClass());
+        for each (var propertyDescriptorVO:PropertyDescriptorVO in properties) {
+            var propertyName:String = propertyDescriptorVO.name;
+            if(propertyName in source){
+                this[propertyName] = source[propertyName];
+            }
+        }
+    }
+
     public function equals(value:*):Boolean{
         return (this == value);
     }

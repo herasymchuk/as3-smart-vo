@@ -1,0 +1,9 @@
+<!-- as3-smart-vo -->
+<!ELEMENT RemoteProperty EMPTY>
+<!ATTLIST RemoteProperty
+		_DEFAULT_ CDATA #IMPLIED
+		remoteName CDATA #IMPLIED
+		collectionElementType CDATA "com.trembit.reflections.vo.BaseVO"
+		initializer CDATA #IMPLIED
+		>
+<!ELEMENT Ignored EMPTY>

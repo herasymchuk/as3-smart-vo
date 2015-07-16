@@ -18,7 +18,7 @@ import mx.collections.ArrayCollection;
 
 public final class TransformerUtil {
 
-	private static const PRIMITIVE_TYPES:Array = ["String", "Number", "int", "Boolean", "uint"];
+	private static const PRIMITIVE_TYPES:Array = ["String", "Number", "int", "Boolean", "uint", "Class", "Function"];
 	private static const ARRAY_COLLECTION_TYPE:String = getQualifiedClassName(ArrayCollection);
 	private static const DATE_TYPE:String = getQualifiedClassName(Date);
 	private static const ARRAY_TYPE:String = getQualifiedClassName(Array);

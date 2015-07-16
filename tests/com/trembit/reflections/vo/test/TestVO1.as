@@ -68,6 +68,10 @@ public class TestVO1 extends BaseVO {
 	[Bindable]
 	public var prop8:ArrayCollection;
 
+	public var prop9:Class;
+
+	public var prop10:Function;
+
 	public var voType:String;
 
 	[RemoteProperty("remote")]
@@ -122,6 +126,8 @@ public class TestVO1 extends BaseVO {
 				value.prop2 == prop2 &&
 				(value.prop3 == prop3 || isNaN(value.prop3) && isNaN(prop3)) &&
 				value.prop4 == prop4 &&
+				value.prop9 == prop9 &&
+				value.prop10 == prop10 &&
 				dateEquals(value.prop5, prop5) &&
 				collectionEquals(value.prop6, prop6) &&
 				collectionEquals(value.prop7, prop7) &&

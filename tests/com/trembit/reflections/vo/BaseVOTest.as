@@ -15,7 +15,7 @@ import mx.collections.ArrayCollection;
 
 public final class BaseVOTest {
 
-	private static function getSource(prop1:int, prop2:uint, prop3:Number, prop4:String, prop5:Date, prop6:*, prop7:*, prop8:*, voType:int):Object{
+	private static function getSource(prop1:int, prop2:uint, prop3:Number, prop4:String, prop5:Date, prop6:*, prop7:*, prop8:*, prop9:Class, prop10:Function, voType:int):Object{
 		return {
 			prop1:prop1,
 			prop2:prop2,
@@ -25,6 +25,8 @@ public final class BaseVOTest {
 			prop6:prop6,
 			prop7:prop7,
 			prop8:prop8,
+			prop9:prop9,
+			prop10:prop10,
 			voType:voType,
 			remote:"SET",
 			testTrans:"SET",
@@ -43,11 +45,11 @@ public final class BaseVOTest {
 	[Test]
 	public function testCreate():void {
 		var source:Object = getSource(1, 0xFFFF00, 36.5, "Hello World", new Date(), [
-			getSource(2, 0xFF0000, NaN, "T2", null, null, null, null, 0),
-			getSource(2, 0xFF0000, NaN, "T3", null, null, null, null, 1)
+			getSource(2, 0xFF0000, NaN, "T2", null, null, null, null, null, null, 0),
+			getSource(2, 0xFF0000, NaN, "T3", null, null, null, null, null, null, 1)
 		], [1, 2, 3], [
-			getSource(2, 0xFF0000, NaN, "T4", null, null, null, null, 1),
-			getSource(2, 0xFF0000, NaN, "T5", null, null, null, null, 0)], -1);
+			getSource(2, 0xFF0000, NaN, "T4", null, null, null, null, null, null, 1),
+			getSource(2, 0xFF0000, NaN, "T5", null, null, null, null, null, null, 0)], BaseVOTest, getSource, -1);
 		var vo:TestVO1 = BaseVO.create(source, TestVO1);
 		Assert.assertNotNull(vo);
 		Assert.assertEquals(vo.getClass(), TestVO1);
@@ -72,12 +74,12 @@ public final class BaseVOTest {
 	public function testCreateVOCollection():void {
 		var source:Array = [
 			getSource(1, 0xFFFF00, 36.5, "Hello World", new Date(), [
-				getSource(2, 0xFF0000, NaN, "T2", null, null, null, null, 0),
-				getSource(2, 0xFF0000, NaN, "T3", null, null, null, null, 1)
+				getSource(2, 0xFF0000, NaN, "T2", null, null, null, null, null, null, 0),
+				getSource(2, 0xFF0000, NaN, "T3", null, null, null, null, null, null, 1)
 			], [1, 2, 3], [
-				getSource(2, 0xFF0000, NaN, "T4", null, null, null, null, 1),
-				getSource(2, 0xFF0000, NaN, "T5", null, null, null, null, 0)], -1),
-			getSource(2, 0xFF0000, NaN, "T6", null, null, null, null, 1)
+				getSource(2, 0xFF0000, NaN, "T4", null, null, null, null, null, null, 1),
+				getSource(2, 0xFF0000, NaN, "T5", null, null, null, null, null, null, 0)], BaseVOTest, getSource, -1),
+			getSource(2, 0xFF0000, NaN, "T6", null, null, null, null, null, null, 1)
 		];
 		var ac:ArrayCollection = BaseVO.createVOCollection(source, TestVO1);
 		Assert.assertNotNull(ac);
@@ -92,11 +94,11 @@ public final class BaseVOTest {
 	public function testSetData():void {
 		var vo:TestVO1 = new TestVO1();
 		var source:Object = getSource(1, 0xFFFF00, 36.5, "Hello World", new Date(), [
-			getSource(2, 0xFF0000, NaN, "T2", null, null, null, null, 0),
-			getSource(2, 0xFF0000, NaN, "T3", null, null, null, null, 1)
+			getSource(2, 0xFF0000, NaN, "T2", null, null, null, null, null, null, 0),
+			getSource(2, 0xFF0000, NaN, "T3", null, null, null, null, null, null, 1)
 		], [1, 2, 3], [
-			getSource(2, 0xFF0000, NaN, "T4", null, null, null, null, 1),
-			getSource(2, 0xFF0000, NaN, "T5", null, null, null, null, 0)], -1);
+			getSource(2, 0xFF0000, NaN, "T4", null, null, null, null, null, null, 1),
+			getSource(2, 0xFF0000, NaN, "T5", null, null, null, null, null, null, 0)], BaseVOTest, getSource, -1);
 		vo.setData(source);
 		Assert.assertTrue(vo.equals(source));
 		Assert.assertFalse(vo.testTrans == source.testTrans);
@@ -111,11 +113,11 @@ public final class BaseVOTest {
 	public function testClone():void {
 		var vo:TestVO1 = new TestVO1();
 		var source:Object = getSource(1, 0xFFFF00, 36.5, "Hello World", new Date(), [
-			getSource(2, 0xFF0000, NaN, "T2", null, null, null, null, 0),
-			getSource(2, 0xFF0000, NaN, "T3", null, null, null, null, 1)
+			getSource(2, 0xFF0000, NaN, "T2", null, null, null, null, null, null, 0),
+			getSource(2, 0xFF0000, NaN, "T3", null, null, null, null, null, null, 1)
 		], [1, 2, 3], [
-			getSource(2, 0xFF0000, NaN, "T4", null, null, null, null, 1),
-			getSource(2, 0xFF0000, NaN, "T5", null, null, null, null, 0)], -1);
+			getSource(2, 0xFF0000, NaN, "T4", null, null, null, null, null, null, 1),
+			getSource(2, 0xFF0000, NaN, "T5", null, null, null, null, null, null, 0)], BaseVOTest, getSource, -1);
 		vo.setData(source);
 		var newVO:TestVO1 = vo.clone();
 		Assert.assertNotNull(newVO);
@@ -125,11 +127,11 @@ public final class BaseVOTest {
 	[Test]
 	public function testSynchronize():void {
 		var source:Object = getSource(1, 0xFFFF00, 36.5, "Hello World", new Date(), [
-			getSource(2, 0xFF0000, NaN, "T2", null, null, null, null, 0),
-			getSource(2, 0xFF0000, NaN, "T3", null, null, null, null, 1)
+			getSource(2, 0xFF0000, NaN, "T2", null, null, null, null, null, null, 0),
+			getSource(2, 0xFF0000, NaN, "T3", null, null, null, null, null, null, 1)
 		], [1, 2, 3], [
-			getSource(2, 0xFF0000, NaN, "T4", null, null, null, null, 1),
-			getSource(2, 0xFF0000, NaN, "T5", null, null, null, null, 0)], -1);
+			getSource(2, 0xFF0000, NaN, "T4", null, null, null, null, null, null, 1),
+			getSource(2, 0xFF0000, NaN, "T5", null, null, null, null, null, null, 0)], BaseVOTest, getSource, -1);
 		var syncData:TestVO1 = BaseVO.create(source, TestVO1);
 		syncData.testTrans = "HELLO";
 		var data:TestVO3 = new TestVO3();
@@ -142,6 +144,8 @@ public final class BaseVOTest {
 		Assert.assertEquals(data.prop6, syncData.prop6);
 		Assert.assertEquals(data.prop7, syncData.prop7);
 		Assert.assertEquals(data.prop8, syncData.prop8);
+		Assert.assertEquals(data.prop9, syncData.prop9);
+		Assert.assertEquals(data.prop10, syncData.prop10);
 		Assert.assertEquals(data.voType, syncData.voType);
 		Assert.assertEquals(data.testRemote, syncData.testRemote);
 		Assert.assertEquals(data.testInit, syncData.testInit);

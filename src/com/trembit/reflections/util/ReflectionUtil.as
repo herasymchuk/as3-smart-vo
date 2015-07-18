@@ -50,6 +50,7 @@ public final class ReflectionUtil {
                 var collectionElementType:String;
                 var initializer:String;
                 var isTransient:Boolean;
+                var defaultValue:*;
 
                 if(propertyXML.metadata.(@name == MetadataConsts.IGNORED_NAME).length()){
                     continue;
@@ -59,18 +60,22 @@ public final class ReflectionUtil {
                     remotePropertyName = String(propertyXML.metadata.(@name == MetadataConsts.REMOTE_PROPERTY_NAME).arg.(@key == MetadataConsts.DEFAULT_KEY || @key == MetadataConsts.REMOTE_PROPERTY_REMOTE_NAME_KEY).@value);
                     collectionElementType = String(propertyXML.metadata.(@name == MetadataConsts.REMOTE_PROPERTY_NAME).arg.(@key == MetadataConsts.REMOTE_PROPERTY_COLLECTION_ELEMENT_TYPE_KEY).@value);
                     initializer = String(propertyXML.metadata.(@name == MetadataConsts.REMOTE_PROPERTY_NAME).arg.(@key == MetadataConsts.REMOTE_PROPERTY_INITIALIZER_KEY).@value);
+                    defaultValue = String(propertyXML.metadata.(@name == MetadataConsts.REMOTE_PROPERTY_NAME).arg.(@key == MetadataConsts.REMOTE_PROPERTY_DEFAULT_VALUE_KEY).@value);
                     if(collectionElementType == ""){
                         collectionElementType = null;
                     }
                     if(initializer == ""){
                         initializer = null;
                     }
+                    if(defaultValue == ""){
+                        defaultValue = null;
+                    }
                 }
 
                 isTransient = Boolean(propertyXML.metadata.(@name == MetadataConsts.TRANSIENT_NAME).length());
 
                 if (accessType != MetadataConsts.ACCESS_TYPE_READONLY && accessType != MetadataConsts.ACCESS_TYPE_WRITEONLY) {
-                    properties.push(new PropertyDescriptorVO(propertyName, remotePropertyName, propertyFullType, collectionElementType, initializer, isTransient));
+                    properties.push(new PropertyDescriptorVO(propertyName, remotePropertyName, propertyFullType, collectionElementType, initializer, isTransient, defaultValue));
                 }
             }
             classDescriptionDictionary[classOfInterest] = properties;
@@ -118,6 +123,7 @@ public final class ReflectionUtil {
         var collectionElementType:String;
         var initializer:String;
         var isTransient:Boolean;
+        var defaultValue:* = undefined;
         for each(var meta:Object in item.metadata) {
             switch (meta.name){
                 case MetadataConsts.REMOTE_PROPERTY_NAME:
@@ -136,6 +142,9 @@ public final class ReflectionUtil {
                             case MetadataConsts.REMOTE_PROPERTY_INITIALIZER_KEY:
                                 initializer = String(metaItem.value);
                                 break;
+                            case MetadataConsts.REMOTE_PROPERTY_DEFAULT_VALUE_KEY:
+                                defaultValue = metaItem.value;
+                                break;
                         }
                     }
                     break;
@@ -145,7 +154,7 @@ public final class ReflectionUtil {
                 case MetadataConsts.IGNORED_NAME: return null;
             }
         }
-        return new PropertyDescriptorVO(propertyName, remotePropertyName, propertyFullType, collectionElementType, initializer, isTransient);
+        return new PropertyDescriptorVO(propertyName, remotePropertyName, propertyFullType, collectionElementType, initializer, isTransient, defaultValue);
     }
 
     public static function getDefinitionByName(name:String):Class {

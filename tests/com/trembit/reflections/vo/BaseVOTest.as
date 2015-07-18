@@ -31,7 +31,9 @@ public final class BaseVOTest {
 			remote:"SET",
 			testTrans:"SET",
 			testInit:"SET",
-			testIgnored:"SET"
+			testIgnored:"SET",
+			testDefault1:null,
+			testDefault2:NaN
 		};
 	}
 
@@ -68,6 +70,10 @@ public final class BaseVOTest {
 		vo = BaseVO.create(source, TestVO1, false);
 		Assert.assertEquals(vo.prop3.toString(), source.prop3);
 		Assert.assertEquals(vo.testTrans, source.testTrans);
+		Assert.assertEquals(TestVO3(vo.prop6[1]).testVO3Property, "NOT_SET");
+		Assert.assertEquals(TestVO3(vo.prop6[1]).testDefault1, "SET");
+		Assert.assertEquals(TestVO3(vo.prop6[1]).testDefault2, 2);
+		Assert.assertEquals(TestVO3(vo.prop6[1]).testDefault3, "");
 	}
 
 	[Test]

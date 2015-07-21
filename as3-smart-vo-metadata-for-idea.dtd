@@ -5,5 +5,6 @@
 		remoteName CDATA #IMPLIED
 		collectionElementType CDATA "com.trembit.reflections.vo.BaseVO"
 		initializer CDATA #IMPLIED
+		defaultValue CDATA #IMPLIED
 		>
 <!ELEMENT Ignored EMPTY>

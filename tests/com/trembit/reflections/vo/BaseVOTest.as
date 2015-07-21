@@ -36,6 +36,8 @@ public final class BaseVOTest {
             remote: "SET",
             testTrans: "SET",
             testInit: "SET",
+            testDefault1: null,
+            testDefault2: NaN,
             testIgnored: "SET"
         };
     }
@@ -54,28 +56,32 @@ public final class BaseVOTest {
             getSource(2, 0xFF0000, NaN, "T3", null, null, null, null, null, null, {prop: 1, prop2: "String"}, 1)
         ], [1, 2, 3], [
             getSource(2, 0xFF0000, NaN, "T4", null, null, null, null, null, null, {prop: 1, prop2: "String"}, 1),
-            getSource(2, 0xFF0000, NaN, "T5", null, null, null, null, null, null, {
-                prop: 1,
-                prop2: "String"
-            }, 0)], BaseVOTest, getSource, {prop: 1, prop2: "String", prop3: new BaseVO()}, -1);
+            getSource(2, 0xFF0000, NaN, "T5", null, null, null, null, null, null, null, 0)], BaseVOTest, getSource, {
+            prop: 1,
+            prop2: "String"
+        }, -1);
         var vo:TestVO1 = BaseVO.create(source, TestVO1);
         assertNotNull(vo);
         assertEquals(vo.getClass(), TestVO1);
         assertTrue(vo.equals(source));
         assertEquals(vo.voType, source.voType.toString());
-        assertTrue("1", vo.prop6[0] is TestVO2);
-        assertTrue("2", vo.prop6[1] is TestVO3);
-        assertTrue("3", vo.prop8[0] is TestVO3);
-        assertTrue("4", vo.prop8[1] is TestVO2);
-        assertEquals("5", vo.testRemote, source.remote);
-        assertEquals("6", vo.testInit, vo.testInitializer(source));
-        assertFalse("7", vo.testIgnored == source.testIgnored);
-        assertFalse("8", vo.testTrans == source.testTrans);
+        assertTrue(vo.prop6[0] is TestVO2);
+        assertTrue(vo.prop6[1] is TestVO3);
+        assertTrue(vo.prop8[0] is TestVO3);
+        assertTrue(vo.prop8[1] is TestVO2);
+        assertEquals(vo.testRemote, source.remote);
+        assertEquals(vo.testInit, vo.testInitializer(source));
+        assertFalse(vo.testIgnored == source.testIgnored);
+        assertFalse(vo.testTrans == source.testTrans);
         assertEquals(vo.prop6[0].testTrans, source.prop6[0].testTrans);
         source.prop3 = source.prop3.toString();
         vo = BaseVO.create(source, TestVO1, false);
         assertEquals(vo.prop3.toString(), source.prop3);
         assertEquals(vo.testTrans, source.testTrans);
+        assertEquals(TestVO3(vo.prop6[1]).testVO3Property, "NOT_SET");
+        assertEquals(TestVO3(vo.prop6[1]).testDefault1, "SET");
+        assertEquals(TestVO3(vo.prop6[1]).testDefault2, 2);
+        assertEquals(TestVO3(vo.prop6[1]).testDefault3, "");
     }
 
     [Test]

@@ -4,7 +4,8 @@
 			  description="Provides additional info for smart VO reflections.Should only be set on variables or readwrite properties.
 			  Use either empty name or 'remoteName' attribute they have identical functionality.
 			  Attribute 'collectionElementType' can accept any Class but for convenient use it takes BaseVO Classes.
-			  Attribute 'initializer' is object's method: public function YOUR_NAME(source:*):PROPERTY_TYPE">
+			  Attribute 'initializer' is object's method: public function YOUR_NAME(source:*):PROPERTY_TYPE
+			  Attribute 'defaultValue' is default value for property if source does no contain the property or it's NaN for Number, null or empty for String or !value for others">
 
 		<context name="variable" />
 		<context name="setter" />
@@ -16,10 +17,10 @@
 				   type="Class"
 				   hint="classes"
 				   hintType="com.trembit.reflections.vo.BaseVO"/>
-
 		<attribute name="initializer"
 				   type="String"
 				   hint="methods"/>
+		<attribute name="defaultValue"/>
 	</metadata>
 
 	<metadata name="Ignored"

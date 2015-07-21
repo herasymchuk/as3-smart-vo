@@ -22,6 +22,8 @@ public final class TransformerUtil {
 	private static const ARRAY_COLLECTION_TYPE:String = getQualifiedClassName(ArrayCollection);
 	private static const DATE_TYPE:String = getQualifiedClassName(Date);
 	private static const ARRAY_TYPE:String = getQualifiedClassName(Array);
+	private static const NUMBER_TYPE:String = getQualifiedClassName(Number);
+	private static const STRING_TYPE:String = getQualifiedClassName(String);
 	private static const UNTYPED:String = "*";
 
 	private static const SUPPORT_PAIRS:Array = [];
@@ -70,13 +72,29 @@ public final class TransformerUtil {
 					if (!source.hasOwnProperty(remotePropertyName)) {
 						remotePropertyName = propertyName;
 						if (!source.hasOwnProperty(propertyName)) {
+							if(property.defaultValue != undefined && (!ignoreTransient || !property.isTransient)) {
+								item[propertyName] = property.defaultValue;
+							}
 							continue;
 						}
 					}
 				}
-				item[propertyName] = getItem(source[remotePropertyName], propertyFullType, ignoreTransient, property.collectionElementType);
+				var value:* = getItem(source[remotePropertyName], propertyFullType, ignoreTransient, property.collectionElementType);
+				item[propertyName] = (property.defaultValue != undefined && (!ignoreTransient || !property.isTransient))?
+						getValueOrDefault(value, propertyFullType, property.defaultValue):value;
 			}
 		}
+	}
+
+	private static function getValueOrDefault(value:*, valueType:String, defaultValue:*):*{
+		switch(valueType){
+			case NUMBER_TYPE:
+				var numberValue:Number = Number(value);
+				return isNaN(numberValue)?defaultValue:numberValue;
+			case STRING_TYPE:
+				return (value && value != "")?value:defaultValue;
+		}
+		return value || defaultValue;
 	}
 
 	private static function getItemClassPair():ItemClassPair{

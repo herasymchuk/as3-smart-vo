@@ -16,8 +16,7 @@ public final class MetadataConsts {
 	public static const REMOTE_PROPERTY_REMOTE_NAME_KEY:String = "remoteName";
 	public static const REMOTE_PROPERTY_COLLECTION_ELEMENT_TYPE_KEY:String = "collectionElementType";
 	public static const REMOTE_PROPERTY_INITIALIZER_KEY:String = "initializer";
-
-
+	public static const REMOTE_PROPERTY_DEFAULT_VALUE_KEY:String = "defaultValue";
 
 	public static const ACCESS_TYPE_READONLY:String = "readonly";
 	public static const ACCESS_TYPE_WRITEONLY:String = "writeonly";

@@ -71,6 +71,7 @@ public final class ReflectionUtil {
         var collectionElementType:String;
         var initializer:String;
         var isTransient:Boolean;
+        var defaultValue:* = undefined;
         for each(var meta:Object in item.metadata) {
             switch (meta.name){
                 case MetadataConsts.REMOTE_PROPERTY_NAME:
@@ -89,6 +90,9 @@ public final class ReflectionUtil {
                             case MetadataConsts.REMOTE_PROPERTY_INITIALIZER_KEY:
                                 initializer = String(metaItem.value);
                                 break;
+                            case MetadataConsts.REMOTE_PROPERTY_DEFAULT_VALUE_KEY:
+                                defaultValue = metaItem.value;
+                                break;
                         }
                     }
                     break;
@@ -98,7 +102,7 @@ public final class ReflectionUtil {
                 case MetadataConsts.IGNORED_NAME: return null;
             }
         }
-        return new PropertyDescriptorVO(propertyName, remotePropertyName, propertyFullType, collectionElementType, initializer, isTransient);
+        return new PropertyDescriptorVO(propertyName, remotePropertyName, propertyFullType, collectionElementType, initializer, isTransient, defaultValue);
     }
 
     public static function getDefinitionByName(name:String):Class {

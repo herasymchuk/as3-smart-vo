@@ -1,8 +1,9 @@
 <flex-config>
-   <compiler>
-      <keep-as3-metadata append="true">
-         <name>RemoteProperty</name>
-         <name>Ignored</name>
-      </keep-as3-metadata>
-   </compiler>
+    <compiler>
+        <keep-as3-metadata append="true">
+            <name>RemoteProperty</name>
+            <name>Ignored</name>
+            <name>Transient</name>
+        </keep-as3-metadata>
+    </compiler>
 </flex-config>

@@ -32,53 +32,6 @@ public final class ReflectionUtil {
     private static const definitionByNameDict:Dictionary = new Dictionary();
     private static const DESCRIBE_TYPE_FLAGS:uint = INCLUDE_TRAITS | INCLUDE_ACCESSORS | INCLUDE_VARIABLES | INCLUDE_METADATA | USE_ITRAITS;
 
-    [Deprecated]
-    public static function getProperties_old(classOfInterest:Class):Vector.<PropertyDescriptorVO> {
-        var properties:Vector.<PropertyDescriptorVO> = new Vector.<PropertyDescriptorVO>();
-        if (classOfInterest in classDescriptionDictionary) {
-            properties = classDescriptionDictionary[classOfInterest];
-        } else {
-            var xmlDescriptionOfClass:XML = DescribeTypeCache.describeType(classOfInterest).typeDescription;
-            var nonstaticPropertiesXML:XMLList = xmlDescriptionOfClass.factory.accessor;
-            properties = new Vector.<PropertyDescriptorVO>();
-
-            for each (var propertyXML:XML in nonstaticPropertiesXML) {
-                var propertyName:String = propertyXML.@name;
-                var remotePropertyName:String = propertyName;
-                var propertyFullType:String = propertyXML.@type;
-                var accessType:String = propertyXML.@access;
-                var collectionElementType:String;
-                var initializer:String;
-                var isTransient:Boolean;
-
-                if(propertyXML.metadata.(@name == MetadataConsts.IGNORED_NAME).length()){
-                    continue;
-                }
-
-                if (propertyXML.metadata.(@name == MetadataConsts.REMOTE_PROPERTY_NAME).length()) {
-                    remotePropertyName = String(propertyXML.metadata.(@name == MetadataConsts.REMOTE_PROPERTY_NAME).arg.(@key == MetadataConsts.DEFAULT_KEY || @key == MetadataConsts.REMOTE_PROPERTY_REMOTE_NAME_KEY).@value);
-                    collectionElementType = String(propertyXML.metadata.(@name == MetadataConsts.REMOTE_PROPERTY_NAME).arg.(@key == MetadataConsts.REMOTE_PROPERTY_COLLECTION_ELEMENT_TYPE_KEY).@value);
-                    initializer = String(propertyXML.metadata.(@name == MetadataConsts.REMOTE_PROPERTY_NAME).arg.(@key == MetadataConsts.REMOTE_PROPERTY_INITIALIZER_KEY).@value);
-                    if(collectionElementType == ""){
-                        collectionElementType = null;
-                    }
-                    if(initializer == ""){
-                        initializer = null;
-                    }
-                }
-
-                isTransient = Boolean(propertyXML.metadata.(@name == MetadataConsts.TRANSIENT_NAME).length());
-
-                if (accessType != MetadataConsts.ACCESS_TYPE_READONLY && accessType != MetadataConsts.ACCESS_TYPE_WRITEONLY) {
-                    properties.push(new PropertyDescriptorVO(propertyName, remotePropertyName, propertyFullType, collectionElementType, initializer, isTransient));
-                }
-            }
-            classDescriptionDictionary[classOfInterest] = properties;
-            System.disposeXML(xmlDescriptionOfClass);
-        }
-        return properties;
-    }
-
     public static function getProperties(classOfInterest:Class):Vector.<PropertyDescriptorVO> {
         var properties:Vector.<PropertyDescriptorVO>;
         if (classOfInterest in classDescriptionDictionary) {

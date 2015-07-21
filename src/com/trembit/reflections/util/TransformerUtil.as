@@ -18,10 +18,11 @@ import mx.collections.ArrayCollection;
 
 public final class TransformerUtil {
 
-	private static const PRIMITIVE_TYPES:Array = ["String", "Number", "int", "Boolean", "uint", "Class", "Function"];
+	public static const PRIMITIVE_TYPES:Array = ["String", "Number", "int", "Boolean", "uint", "Class", "Function"];
 	private static const ARRAY_COLLECTION_TYPE:String = getQualifiedClassName(ArrayCollection);
 	private static const DATE_TYPE:String = getQualifiedClassName(Date);
 	private static const ARRAY_TYPE:String = getQualifiedClassName(Array);
+	private static const UNTYPED:String = "*";
 
 	private static const SUPPORT_PAIRS:Array = [];
 
@@ -38,6 +39,10 @@ public final class TransformerUtil {
 
 	public static function createItemByClass(source:*, itemClass:Class, ignoreTransient:Boolean):*{
 		return getItem(source, getQualifiedClassName(itemClass), ignoreTransient);
+	}
+
+	public static function createArrayByElementClass(source:*, elementClass:Class, ignoreTransient:Boolean):Array {
+		return getItem(source, ARRAY_TYPE, ignoreTransient, elementClass ? getQualifiedClassName(elementClass) : null);
 	}
 
 	public static function createCollectionByElementClass(source:*, elementClass:Class, ignoreTransient:Boolean):ArrayCollection {
@@ -90,7 +95,7 @@ public final class TransformerUtil {
 	private static function getItem(source:*, propertyType:String, ignoreTransient:Boolean, collectionElementType:String = null):* {
 		var res:* = null;
 		if (source != null) {
-			if (PRIMITIVE_TYPES.indexOf(propertyType) > -1) {
+			if (PRIMITIVE_TYPES.indexOf(propertyType) > -1 || propertyType == UNTYPED) {
 				res = source;
 			} else if(propertyType == DATE_TYPE) {
 				res = (dateParseFunction != null)?dateParseFunction(source):source;

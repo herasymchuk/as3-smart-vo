@@ -5,7 +5,9 @@
  * Time: 13:30
  */
 package com.trembit.reflections.vo.test {
+import com.trembit.reflections.util.MatchUtil;
 import com.trembit.reflections.vo.BaseVO;
+import com.trembit.reflections.vo.BaseVOTest;
 
 import flash.utils.getQualifiedClassName;
 
@@ -72,6 +74,8 @@ public class TestVO1 extends BaseVO {
 
 	public var prop10:Function;
 
+    public var prop11:*;
+
 	public var voType:String;
 
 	[RemoteProperty("remote")]
@@ -128,6 +132,7 @@ public class TestVO1 extends BaseVO {
 				value.prop4 == prop4 &&
 				value.prop9 == prop9 &&
 				value.prop10 == prop10 &&
+                MatchUtil.equals(value.prop11, prop11) &&
 				dateEquals(value.prop5, prop5) &&
 				collectionEquals(value.prop6, prop6) &&
 				collectionEquals(value.prop7, prop7) &&

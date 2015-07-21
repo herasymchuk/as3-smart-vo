@@ -17,6 +17,10 @@ public class BaseVO extends EventDispatcher{
         return TransformerUtil.createItemByClass(source, baseClass, ignoreTransient);
     }
 
+	public static function createArray(source:Object, elementClass:Class = null, ignoreTransient:Boolean = true):Array{
+		return TransformerUtil.createArrayByElementClass(source, elementClass, ignoreTransient);
+	}
+
     public static function createVOCollection(source:Object, elementClass:Class, ignoreTransient:Boolean = true):ArrayCollection{
         return TransformerUtil.createCollectionByElementClass(source, elementClass, ignoreTransient);
     }
@@ -70,6 +74,5 @@ public class BaseVO extends EventDispatcher{
     protected function getItemType(baseClassFullType:String, vo:*):String {
         return baseClassFullType;
     }
-
 }
 }

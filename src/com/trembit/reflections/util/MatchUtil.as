@@ -5,8 +5,6 @@ import com.trembit.reflections.vo.PropertyDescriptorVO;
 
 import flash.display.Sprite;
 
-import mx.collections.ArrayCollection;
-
 public class MatchUtil extends Sprite {
 
     public static function equals(input:*, output:*, strict:Boolean = true):Boolean {
@@ -16,7 +14,7 @@ public class MatchUtil extends Sprite {
             return false;
         } else if (strict && getQualifiedClassName(input) != getQualifiedClassName(output)) {
             return false;
-        } else if ((input is Array || isVector(input) || input is ArrayCollection) && (output is Array || isVector(output) || output is ArrayCollection)) {
+        } else if ((input is Array || isVector(input) || isArrayCollection(input)) && (output is Array || isVector(output) || isArrayCollection(output))) {
             return equalsArray(input, output, strict);
         } else if (((input is Function) && (output is Function)) || ((input is Class) && (output is Class))) {
             return false;
@@ -32,15 +30,13 @@ public class MatchUtil extends Sprite {
         trace(ReflectionUtil.getClassByInstance(input));
         var properties:Vector.<PropertyDescriptorVO> = ReflectionUtil.getProperties(ReflectionUtil.getClassByInstance(input));
         for each(var item:PropertyDescriptorVO in properties) {
-            if(item.isTransient) continue;
-            if (!equals(input[item.name], output[item.name], strict)) {
-                if(!equals(input[item.name], output[item.remoteName], strict)) {
-                    if(!equals(input[item.name], output[item.remoteName.toLowerCase()], strict)) {
-                        if(item.initializer != null && !equals(input[item.name], input[item.initializer](output), strict)) {
-                            return false;
-                        }
-                    }
+            if (item.isTransient) continue;
+            if (item.initializer != null) {
+                if(!equals(getValue(input, item), input[item.initializer](output), strict)) {
+                    return false;
                 }
+            } else if (!equals(getValue(input, item), getValue(output, item), strict)) {
+                return false;
             }
         }
         if (!properties.length) {
@@ -53,12 +49,29 @@ public class MatchUtil extends Sprite {
         return true;
     }
 
+    private static function getValue(source:Object, descriptor:PropertyDescriptorVO):* {
+        var value:* = null;
+        if (source) {
+            if (source.hasOwnProperty(descriptor.name)) {
+                value = source[descriptor.name];
+            } else if (source.hasOwnProperty(descriptor.remoteName)) {
+                value = source[descriptor.remoteName];
+            } else if (source.hasOwnProperty(descriptor.remoteName.toLowerCase())) {
+                value = source[descriptor.remoteName.toLowerCase()];
+            }
+        }
+        if(descriptor.isSerialized && value is String) {
+            value = JSON.parse(value);
+        }
+        return value;
+    }
+
     private static function equalsArray(input:*, output:*, strict:Boolean):Boolean {
         if (input.length != output.length) {
             return false;
         } else {
             for (var i:int = 0; i < input.length; i++) {
-                if (!equals(getElementAt(input,i), getElementAt(output,i), strict)) {
+                if (!equals(getElementAt(input, i), getElementAt(output, i), strict)) {
                     return false;
                 }
             }
@@ -67,8 +80,8 @@ public class MatchUtil extends Sprite {
     }
 
     private static function getElementAt(input:*, i:int):* {
-        if(input is ArrayCollection) {
-            return (input as ArrayCollection).getItemAt(i);
+        if (isArrayCollection(input)) {
+            return input.getItemAt(i);
         } else {
             return input[i];
         }
@@ -81,6 +94,15 @@ public class MatchUtil extends Sprite {
         || obj is Vector.<Number>
         || obj is Vector.<int>
         || obj is Vector.<uint>);
+    }
+
+    private static function isArrayCollection(obj:Object):Boolean {
+        CONFIG::Flex {
+            import mx.collections.ArrayCollection;
+
+            return obj is ArrayCollection;
+        }
+        return false;
     }
 }
 }

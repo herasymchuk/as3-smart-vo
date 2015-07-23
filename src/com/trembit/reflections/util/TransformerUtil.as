@@ -14,16 +14,23 @@ import flash.utils.Dictionary;
 
 import flash.utils.getQualifiedClassName;
 
-import mx.collections.ArrayCollection;
-
 public final class TransformerUtil {
 
 	public static const PRIMITIVE_TYPES:Array = ["String", "Number", "int", "Boolean", "uint", "Class", "Function"];
-	private static const ARRAY_COLLECTION_TYPE:String = getQualifiedClassName(ArrayCollection);
+
+    private static const ARRAY_COLLECTION_TYPE:String = getArrayCollectionType();
+    private static function getArrayCollectionType():String {
+        CONFIG::Flex {
+            import mx.collections.ArrayCollection;
+            return getQualifiedClassName(ArrayCollection);
+        }
+        return "ArrayCollection";
+    }
 	private static const DATE_TYPE:String = getQualifiedClassName(Date);
 	private static const ARRAY_TYPE:String = getQualifiedClassName(Array);
 	private static const NUMBER_TYPE:String = getQualifiedClassName(Number);
 	private static const STRING_TYPE:String = getQualifiedClassName(String);
+    private static const OBJECT_TYPE:String = getQualifiedClassName(Object);
 	private static const UNTYPED:String = "*";
 
 	private static const SUPPORT_PAIRS:Array = [];
@@ -47,9 +54,12 @@ public final class TransformerUtil {
 		return getItem(source, ARRAY_TYPE, ignoreTransient, elementClass ? getQualifiedClassName(elementClass) : null);
 	}
 
-	public static function createCollectionByElementClass(source:*, elementClass:Class, ignoreTransient:Boolean):ArrayCollection {
-		return getItem(source, ARRAY_COLLECTION_TYPE, ignoreTransient, getQualifiedClassName(elementClass));
-	}
+    CONFIG::Flex {
+        import mx.collections.ArrayCollection;
+        public static function createCollectionByElementClass(source:*, elementClass:Class, ignoreTransient:Boolean):ArrayCollection {
+            return getItem(source, ARRAY_COLLECTION_TYPE, ignoreTransient, getQualifiedClassName(elementClass));
+        }
+    }
 
 	private static function populateItemByClass(pair:ItemClassPair, source:Object, ignoreTransient:Boolean):void{
 		var properties:Vector.<PropertyDescriptorVO> = ReflectionUtil.getProperties(pair.itemClass);
@@ -79,9 +89,15 @@ public final class TransformerUtil {
 						}
 					}
 				}
-				var value:* = getItem(source[remotePropertyName], propertyFullType, ignoreTransient, property.collectionElementType);
-				item[propertyName] = (property.defaultValue != undefined && (!ignoreTransient || !property.isTransient))?
-						getValueOrDefault(value, propertyFullType, property.defaultValue):value;
+                var sourceValue:* = source[remotePropertyName];
+                if(property.isSerialized && sourceValue is String) {
+                    sourceValue = JSON.parse(sourceValue);
+                }
+				var value:* = getItem(sourceValue, propertyFullType, ignoreTransient, property.collectionElementType);
+                if(property.defaultValue != undefined && (!ignoreTransient || !property.isTransient)) {
+                    value = getValueOrDefault(value, propertyFullType, property.defaultValue);
+                }
+				item[propertyName] = value;
 			}
 		}
 	}
@@ -113,14 +129,16 @@ public final class TransformerUtil {
 	private static function getItem(source:*, propertyType:String, ignoreTransient:Boolean, collectionElementType:String = null):* {
 		var res:* = null;
 		if (source != null) {
-			if (PRIMITIVE_TYPES.indexOf(propertyType) > -1 || propertyType == UNTYPED) {
+			if (PRIMITIVE_TYPES.indexOf(propertyType) > -1 || propertyType == UNTYPED || propertyType == OBJECT_TYPE) {
 				res = source;
 			} else if(propertyType == DATE_TYPE) {
 				res = (dateParseFunction != null)?dateParseFunction(source):source;
 			} else if ((propertyType.indexOf("__AS3__.vec::Vector") == 0) || (propertyType.indexOf("Vector.<") == 0)) {
 				res = getVector(source, propertyType, ignoreTransient);
 			} else if (propertyType == ARRAY_COLLECTION_TYPE) {
-				res = getCollection(source, collectionElementType, ignoreTransient);
+                CONFIG::Flex {
+                    res = getCollection(source, collectionElementType, ignoreTransient);
+                }
 			} else if (propertyType == ARRAY_TYPE) {
 				res = getArray(source, collectionElementType, ignoreTransient);
 			} else {
@@ -151,9 +169,12 @@ public final class TransformerUtil {
 		return resArray;
 	}
 
-	private static function getCollection(source:*, collectionElementType:String, ignoreTransient:Boolean):ArrayCollection {
-		return new ArrayCollection(getArray(source, collectionElementType, ignoreTransient));
-	}
+    CONFIG::Flex {
+        import mx.collections.ArrayCollection;
+        private static function getCollection(source:*, collectionElementType:String, ignoreTransient:Boolean):ArrayCollection {
+            return new ArrayCollection(getArray(source, collectionElementType, ignoreTransient));
+        }
+    }
 
 	private static function getVector(source:*, propertyType:String, ignoreTransient:Boolean):* {
 		var vectorItemType:String = propertyType.substring(propertyType.indexOf("<") + 1, propertyType.lastIndexOf(">"));

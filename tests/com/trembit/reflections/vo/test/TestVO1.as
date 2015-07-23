@@ -75,6 +75,12 @@ public class TestVO1 extends BaseVO {
 
     public var prop11:*;
 
+    [Serialized]
+    public var testSerialized1:Object;
+
+    [Serialized]
+    public var testSerialized2:Object;
+
     public var voType:String;
 
     [RemoteProperty("remote")]

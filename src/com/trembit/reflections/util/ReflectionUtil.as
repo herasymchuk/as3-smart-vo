@@ -11,12 +11,9 @@ import com.trembit.reflections.consts.MetadataConsts;
 
 import com.trembit.reflections.vo.PropertyDescriptorVO;
 
-import flash.system.System;
 import flash.utils.Dictionary;
 import flash.utils.getQualifiedClassName;
 import flash.utils.getQualifiedSuperclassName;
-
-import mx.utils.DescribeTypeCache;
 
 use namespace USE_ITRAITS;
 
@@ -71,6 +68,7 @@ public final class ReflectionUtil {
         var collectionElementType:String;
         var initializer:String;
         var isTransient:Boolean;
+        var isSerialized:Boolean;
         var defaultValue:* = undefined;
         for each(var meta:Object in item.metadata) {
             switch (meta.name){
@@ -100,9 +98,12 @@ public final class ReflectionUtil {
                     isTransient = true;
                     break;
                 case MetadataConsts.IGNORED_NAME: return null;
+                case MetadataConsts.SERIALIZED_NAME: {
+                    isSerialized = true;
+                }
             }
         }
-        return new PropertyDescriptorVO(propertyName, remotePropertyName, propertyFullType, collectionElementType, initializer, isTransient, defaultValue);
+        return new PropertyDescriptorVO(propertyName, remotePropertyName, propertyFullType, collectionElementType, initializer, isTransient, isSerialized, defaultValue);
     }
 
     public static function getDefinitionByName(name:String):Class {
@@ -123,39 +124,43 @@ public final class ReflectionUtil {
         return instance["constructor"] || getDefinitionByName(getQualifiedClassName(instance));
     }
 
-    [Deprecated]
-    public static function getPublicBooleanProperties(propertyType:*):Array {
-        var description:XML = DescribeTypeCache.describeType(propertyType).typeDescription;
-        var accessor:XMLList = description..accessor.(@access == MetadataConsts.ACCESS_TYPE_READWRITE && @type == "Boolean").@name;
-        var result:Array = [];
-        for each (var node:XML in accessor) {
-            result.push(node.toString());
+    CONFIG::Flex {
+        import mx.utils.DescribeTypeCache;
+        [Deprecated]
+        public static function getPublicBooleanProperties(propertyType:*):Array {
+            var description:XML = DescribeTypeCache.describeType(propertyType).typeDescription;
+            var accessor:XMLList = description..accessor.(@access == MetadataConsts.ACCESS_TYPE_READWRITE && @type == "Boolean").@name;
+            var result:Array = [];
+            for each (var node:XML in accessor) {
+                result.push(node.toString());
+            }
+            return result;
         }
-        return result;
-    }
 
-    [Deprecated]
-    static public function isOverridden(source:*, methodName:String):Boolean {
-        var parentTypeName:String = getQualifiedSuperclassName(source);
-        if (parentTypeName == null) {
+        [Deprecated]
+        static public function isOverridden(source:*, methodName:String):Boolean {
+            var parentTypeName:String = getQualifiedSuperclassName(source);
+            if (parentTypeName == null) {
+                return false;
+            }
+            var typeName:String = getQualifiedClassName(source);
+            var typeDesc:XML = DescribeTypeCache.describeType(getDefinitionByName(typeName)).typeDescription;
+            var methodList:XMLList = typeDesc.factory.method.(@name == methodName);
+
+            if (methodList.length() > 0) {
+                //Method exists
+                var methodData:XML = methodList[0];
+                if (methodData.@declaredBy == typeName) {
+                    //Method is declared in self
+                    var parentTypeDesc:XML = DescribeTypeCache.describeType(getDefinitionByName(parentTypeName)).typeDescription;
+                    var parentMethodList:XMLList = parentTypeDesc.factory.method.(@name == methodName);
+                    return parentMethodList.length() > 0;
+                }
+            }
+
             return false;
         }
-        var typeName:String = getQualifiedClassName(source);
-        var typeDesc:XML = DescribeTypeCache.describeType(getDefinitionByName(typeName)).typeDescription;
-        var methodList:XMLList = typeDesc.factory.method.(@name == methodName);
-
-        if (methodList.length() > 0) {
-            //Method exists
-            var methodData:XML = methodList[0];
-            if (methodData.@declaredBy == typeName) {
-                //Method is declared in self
-                var parentTypeDesc:XML = DescribeTypeCache.describeType(getDefinitionByName(parentTypeName)).typeDescription;
-                var parentMethodList:XMLList = parentTypeDesc.factory.method.(@name == methodName);
-                return parentMethodList.length() > 0;
-            }
-        }
-
-        return false;
     }
+
 }
 }

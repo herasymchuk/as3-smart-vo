@@ -11,6 +11,7 @@ public final class MetadataConsts {
 
 	public static const IGNORED_NAME:String = "Ignored";
 	public static const TRANSIENT_NAME:String = "Transient";
+	public static const SERIALIZED_NAME:String = "Serialized";
 	public static const REMOTE_PROPERTY_NAME:String = "RemoteProperty";
 
 	public static const REMOTE_PROPERTY_REMOTE_NAME_KEY:String = "remoteName";

@@ -28,5 +28,11 @@
 		<context name="variable" />
 		<context name="setter" />
 	</metadata>
+	
+	<metadata name="Serialized"
+			  description="Marks propery to be parsed from JSON format">
+		<context name="variable" />
+		<context name="setter" />
+	</metadata>
 </annotations>
 

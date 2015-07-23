@@ -1,11 +1,8 @@
 package com.trembit.reflections.util {
 import com.trembit.reflections.vo.BaseVO;
 import com.trembit.reflections.vo.test.TestVO1;
-
 import org.flexunit.asserts.assertFalse;
-
 import org.flexunit.asserts.assertTrue;
-
 
 public class MatchUtilTest {
 
@@ -26,7 +23,9 @@ public class MatchUtilTest {
             remote: "SET",
             testTrans: "SET",
             testInit: "SET",
-            testIgnored: "SET"
+            testIgnored: "SET",
+            testSerialized1: '{"prop1": "1", "prop2": "String"}',
+            testSerialized2: "{}"
         };
     }
 
@@ -53,10 +52,10 @@ public class MatchUtilTest {
         assertFalse(MatchUtil.equals(s, s2));
 
         var source:Object = getSource(1, 0xFFFF00, 36.5, "Hello World", new Date(), [
-            getSource(2, 0xFF0000, NaN, "T2", null, null, null, null, null, null, {prop: 1, prop2: "String"}, 0),
-            getSource(2, 0xFF0000, NaN, "T3", null, null, null, null, null, null, {prop: 1, prop2: "String"}, 1)
+            getSource(2, 0xFF0000, NaN, "T2", null, null, null, null, null, null, {prop: 1, prop2: "String"}, -1),
+            getSource(2, 0xFF0000, NaN, "T3", null, null, null, null, null, null, {prop: 1, prop2: "String"}, -1)
         ], [1, 2, 3], [
-            getSource(2, 0xFF0000, NaN, "T4", null, null, null, null, null, null, {prop: 1, prop2: "String"}, 1),
+            getSource(2, 0xFF0000, NaN, "T4", null, null, null, null, null, null, {prop: 1, prop2: "String"}, -1),
             getSource(2, 0xFF0000, NaN, "T5", null, null, null, null, null, null, {
                 prop: 1,
                 prop2: "String"

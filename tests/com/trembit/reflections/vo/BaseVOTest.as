@@ -38,7 +38,9 @@ public final class BaseVOTest {
             testInit: "SET",
             testDefault1: null,
             testDefault2: NaN,
-            testIgnored: "SET"
+            testIgnored: "SET",
+            testSerialized1: '{"prop1": "1", "prop2": "String"}',
+            testSerialized2: null
         };
     }
 
@@ -136,7 +138,7 @@ public final class BaseVOTest {
     }
 
     [Test]
-    public function testSetData():void {
+    public function testCopyProperties():void {
         var vo:TestVO1 = new TestVO1();
         var source:Object = getSource(1, 0xFFFF00, 36.5, "Hello World", new Date(), [
             getSource(2, 0xFF0000, NaN, "T2", null, null, null, null, null, null, null, 0),
@@ -144,14 +146,20 @@ public final class BaseVOTest {
         ], [1, 2, 3], [
             getSource(2, 0xFF0000, NaN, "T4", null, null, null, null, null, null, null, 1),
             getSource(2, 0xFF0000, NaN, "T5", null, null, null, null, null, null, null, 0)], BaseVOTest, getSource, null, -1);
-        vo.setData(source);
+        vo.copyProperties(source);
         assertTrue(vo.equals(source));
         assertFalse(vo.testTrans == source.testTrans);
         var newVo:TestVO1 = new TestVO1();
+        var obj:Object = {prop1: 10, prop2:"String"};
         vo.testTrans = "Hello world";
-        newVo.setData(vo);
+        vo.testSerialized1 = JSON.stringify(obj);
+        vo.testSerialized2 = obj;
+        newVo.copyProperties(vo);
         assertTrue(newVo.equals(vo));
-        assertEquals(newVo.testTrans, vo.testTrans)
+        assertEquals(newVo.testTrans, vo.testTrans);
+
+        assertTrue(MatchUtil.equals(newVo.testSerialized1, obj));
+        assertEquals(vo.testSerialized2, newVo.testSerialized2);
     }
 
     [Test]
@@ -163,7 +171,7 @@ public final class BaseVOTest {
         ], [1, 2, 3], [
             getSource(2, 0xFF0000, NaN, "T4", null, null, null, null, null, null, null, 1),
             getSource(2, 0xFF0000, NaN, "T5", null, null, null, null, null, null, null, 0)], BaseVOTest, getSource, null, -1);
-        vo.setData(source);
+        vo.copyProperties(source);
         var newVO:TestVO1 = vo.clone();
         assertNotNull(newVO);
         assertTrue(vo.equals(newVO));

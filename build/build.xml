@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="as3-smart vo build scripts" basedir="../" default="all">
+
+	<property name="BUILD_DIR" value="${basedir}/build"/>
+	<loadproperties srcFile="${BUILD_DIR}/build.config"/>
+	<buildnumber file="${BUILD_DIR}/pruduct.build.number"/>
+	
+	<property name="FLEX_HOME" value="${sdk.home}"/>
+	
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+	<taskdef resource="flexTasks.tasks">
+        <classpath>
+            <pathelement path="${sdk.home}/ant/lib/flexTasks.jar"/>
+            <fileset dir="${sdk.home}/lib">
+                <include name="**/*.jar"/>
+            </fileset>
+        </classpath>
+    </taskdef>
+	
+	<property name="SRC_DIR" value="${basedir}/src" />
+	<property name="OUT_DIR" value="${basedir}/bin"/>
+	<!--property name="version.number" value="${version}b${build.number}"/-->
+	<property name="version.number" value="${version}"/>
+	
+	<target name="all" depends="compile-pure-as3, compile-flex" description="Compile both flex and pure as3 lib"/>
+
+	<target name="compile-pure-as3">
+		<property name="COMPILER_OUTPUT_PATH" value="${OUT_DIR}/${name}-${version.number}.swc"/>
+		<property name="config.name" value="${as3.config.name}"/>
+		<antcall target="compile"/>
+		<var name="COMPILER_OUTPUT_PATH" unset="true"/>
+		<var name="config.name" unset="true"/>
+		<antcall target="clear"/>
+	</target>
+	
+	<target name="compile-flex">
+		<property name="COMPILER_OUTPUT_PATH" value="${OUT_DIR}/${name}-flex-${version.number}.swc"/>
+		<property name="config.name" value="${flex.config.name}"/>
+		<antcall target="compile"/>
+		<var name="COMPILER_OUTPUT_PATH" unset="true"/>
+		<var name="config.name" unset="true"/>
+		<antcall target="clear"/>
+	</target>
+	
+	<target name="compile" description="Build SWC library">
+		<echo message="Compile file: ${config.name}"/>
+	
+		<fileset dir="${SRC_DIR}" casesensitive="yes" id="classfiles">
+			<include name="**/*.as"/>
+		</fileset>
+
+		<pathconvert property="classlist" refid="classfiles" pathsep=" " dirsep=".">
+			<regexpmapper from=".*src.(.*)\.as" to="\1"/>
+		</pathconvert>
+		
+		<compc compiler.as3="true" output="${COMPILER_OUTPUT_PATH}" 
+			include-classes="${classlist}"
+			incremental="true" 
+			fork="true" 
+			maxmemory="512m" 
+			compiler.show-deprecation-warnings="false">
+			<load-config filename="${sdk.home}/frameworks/flex-config.xml" />
+			<load-config append="true" filename="${basedir}/${config.name}" />
+			<source-path path-element="${SRC_DIR}" />
+		</compc>
+	</target>
+
+	<target name="clear">
+		<delete>
+			<fileset dir="${OUT_DIR}">
+				<include name="*"/>
+				<exclude name="*.swc"/>
+				<exclude name="*.apk"/>
+				<exclude name="*.ipa"/>
+			</fileset>
+		</delete>
+	</target>
+	
+</project>

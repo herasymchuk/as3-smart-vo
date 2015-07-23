@@ -2,7 +2,7 @@
     <compiler>
         <define>
             <name>CONFIG::Flex</name>
-            <value>false</value>
+            <value>true</value>
         </define>
 
         <keep-as3-metadata append="true">

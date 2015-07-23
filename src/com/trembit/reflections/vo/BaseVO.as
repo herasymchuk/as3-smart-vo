@@ -5,8 +5,6 @@ import com.trembit.reflections.util.TransformerUtil;
 
 import flash.events.EventDispatcher;
 
-import mx.collections.ArrayCollection;
-
 public class BaseVO extends EventDispatcher{
 
     public static function getInstanceType(baseClassObject:BaseVO, baseClassFullType:String, source:*):String{
@@ -21,8 +19,11 @@ public class BaseVO extends EventDispatcher{
 		return TransformerUtil.createArrayByElementClass(source, elementClass, ignoreTransient);
 	}
 
-    public static function createVOCollection(source:Object, elementClass:Class, ignoreTransient:Boolean = true):ArrayCollection{
-        return TransformerUtil.createCollectionByElementClass(source, elementClass, ignoreTransient);
+    CONFIG::Flex {
+        import mx.collections.ArrayCollection;
+        public static function createVOCollection(source:Object, elementClass:Class, ignoreTransient:Boolean = true):ArrayCollection{
+            return TransformerUtil.createCollectionByElementClass(source, elementClass, ignoreTransient);
+        }
     }
 
     private var thisClass:Class;
@@ -35,18 +36,8 @@ public class BaseVO extends EventDispatcher{
         return thisClass;
     }
 
-    public function setData(source:Object):void {
-        if(!source){
-            return;
-        }
-        copyProperties(source);
-    }
-
     public final function clone():* {
-        var voClass:Class = getClass();
-        var item:BaseVO = BaseVO(new voClass());
-        item.setData(this);
-        return item;
+        return create(this, getClass(), false);
     }
 
     public function synchronizeWith(source:*):void{
@@ -67,7 +58,7 @@ public class BaseVO extends EventDispatcher{
         return '';
     }
 
-    protected final function copyProperties(source:Object):void {
+    public final function copyProperties(source:Object):void {
         TransformerUtil.populateItem(this, source, !(source is getClass()));
     }
 

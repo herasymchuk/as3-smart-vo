@@ -81,11 +81,14 @@ public final class TransformerUtil {
 					remotePropertyName = remotePropertyName.toLowerCase();
 					if (!source.hasOwnProperty(remotePropertyName)) {
 						remotePropertyName = propertyName;
-						if (!source.hasOwnProperty(propertyName)) {
-							if(property.defaultValue != undefined && (!ignoreTransient || !property.isTransient)) {
-								item[propertyName] = property.defaultValue;
+						if (!source.hasOwnProperty(remotePropertyName)) {
+							remotePropertyName = propertyName.substr(0, 1).toUpperCase() + propertyName.substr(1);
+							if(!source.hasOwnProperty(remotePropertyName)){
+								if(property.defaultValue != undefined && (!ignoreTransient || !property.isTransient)) {
+									item[propertyName] = property.defaultValue;
+								}
+								continue;
 							}
-							continue;
 						}
 					}
 				}

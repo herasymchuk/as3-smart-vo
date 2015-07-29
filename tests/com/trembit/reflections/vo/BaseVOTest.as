@@ -205,5 +205,12 @@ public final class BaseVOTest {
         assertEquals(data.testInit, syncData.testInit);
         assertNotNull(data.testVO3Property);
     }
+
+    [Test]
+    public function testUpperCasedSource():void{
+        var source:Object = {"Prop1":100};
+        var vo:TestVO1 = BaseVO.create(source, TestVO1);
+        assertEquals(vo.prop1, 100);
+    }
 }
 }

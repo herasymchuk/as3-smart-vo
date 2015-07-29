@@ -5,8 +5,8 @@
       <configuration name="as3-smart-vo" output-type="Library" output-file="as3-smart-vo.swc" output-folder="$MODULE_DIR$/out">
         <dependencies target-player="17.0">
           <entries>
-            <entry library-id="46b60363-2890-438e-8f46-97d074821399">
-              <dependency linkage="Test" />
+            <entry library-name="flexunit" library-level="application">
+              <dependency linkage="Merged" />
             </entry>
           </entries>
           <sdk name="4.14.0.air-17.0" />
@@ -35,15 +35,6 @@
     <orderEntry type="jdk" jdkName="4.14.0.air-17.0" jdkType="Flex SDK Type (new)" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="flexunit-4.2.0-20140410-flex_4.12.0" level="application" />
-    <orderEntry type="module-library" exported="">
-      <library type="flex">
-        <properties id="46b60363-2890-438e-8f46-97d074821399" />
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/flexunit-4.2.0-20140410-flex_4.12.0.swc!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
+    <orderEntry type="library" exported="" name="flexunit" level="application" />
   </component>
 </module>

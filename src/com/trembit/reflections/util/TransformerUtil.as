@@ -46,6 +46,13 @@ public final class TransformerUtil {
 		pair.clean();
 	}
 
+	public static function populateObject(item:Object, $class:Class, source:Object, ignoreTransient:Boolean = true):void{
+		var pair:ItemClassPair = getItemClassPair();
+		pair.setData(item, $class);
+		populateItemByClass(pair, source, ignoreTransient);
+		pair.clean();
+	}
+
 	public static function createItemByClass(source:*, itemClass:Class, ignoreTransient:Boolean):*{
 		return getItem(source, getQualifiedClassName(itemClass), ignoreTransient);
 	}

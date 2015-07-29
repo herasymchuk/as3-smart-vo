@@ -40,7 +40,7 @@ public class TestObject {
             testSerialized1: '{"prop1": "1", "prop2": "String"}',
             testSerialized2: "{}"
         };
-    };
+    }
 
     [Bindable]
     public var prop1:int;
@@ -74,7 +74,7 @@ public class TestObject {
     }
 
     [Test]
-    public function testPopulateObject(){
+    public function testPopulateObject():void{
         var source:Object = getSource(1, 0xFFFF00, 36.5, "Hello World", new Date(), [
             getSource(2, 0xFF0000, NaN, "T2", null, null, null, null, null, null, null, 0),
             getSource(2, 0xFF0000, NaN, "T3", null, null, null, null, null, null, null, 1)

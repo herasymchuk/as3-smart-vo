@@ -6,6 +6,7 @@
  */
 package com.trembit.reflections.vo {
 import com.trembit.reflections.util.MatchUtil;
+import com.trembit.reflections.util.TransformerUtil;
 import com.trembit.reflections.vo.test.TestVO1;
 import com.trembit.reflections.vo.test.TestVO2;
 import com.trembit.reflections.vo.test.TestVO3;
@@ -16,6 +17,8 @@ import org.flexunit.asserts.assertEquals;
 import org.flexunit.asserts.assertFalse;
 import org.flexunit.asserts.assertNotNull;
 import org.flexunit.asserts.assertTrue;
+
+import spark.formatters.DateTimeFormatter;
 
 public final class BaseVOTest {
 
@@ -211,6 +214,18 @@ public final class BaseVOTest {
         var source:Object = {"Prop1":100};
         var vo:TestVO1 = BaseVO.create(source, TestVO1);
         assertEquals(vo.prop1, 100);
+    }
+
+    [Test]
+    public function testDateParser():void{
+        var source:Object = {prop5:"Sat Nov 30 1974"};
+        TransformerUtil.dateParseFunction = function(value:String):Date{return new Date(Date.parse(value));};
+        var vo:TestVO1 = BaseVO.create(source, TestVO1);
+        assertNotNull(vo.prop5);
+        assertEquals(vo.prop5.time, 155030400000);
+        vo = vo.clone();
+        assertNotNull(vo.prop5);
+        assertEquals(vo.prop5.time, 155030400000);
     }
 }
 }

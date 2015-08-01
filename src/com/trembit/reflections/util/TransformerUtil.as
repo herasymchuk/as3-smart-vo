@@ -142,7 +142,7 @@ public final class TransformerUtil {
 			if (PRIMITIVE_TYPES.indexOf(propertyType) > -1 || propertyType == UNTYPED || propertyType == OBJECT_TYPE) {
 				res = source;
 			} else if(propertyType == DATE_TYPE) {
-				res = (dateParseFunction != null)?dateParseFunction(source):source;
+				res = (dateParseFunction != null && !(source is Date))?dateParseFunction(source):source;
 			} else if ((propertyType.indexOf("__AS3__.vec::Vector") == 0) || (propertyType.indexOf("Vector.<") == 0)) {
 				res = getVector(source, propertyType, ignoreTransient);
 			} else if (propertyType == ARRAY_COLLECTION_TYPE) {

@@ -5,6 +5,12 @@ import com.trembit.reflections.util.TransformerUtil;
 
 import flash.events.EventDispatcher;
 
+CONFIG::Flex {
+    import mx.core.IPropertyChangeNotifier;
+    import mx.events.PropertyChangeEvent;
+    import mx.collections.ArrayCollection;
+}
+
 public class BaseVO extends EventDispatcher{
 
     public static function getInstanceType(baseClassObject:BaseVO, baseClassFullType:String, source:*):String{
@@ -20,7 +26,6 @@ public class BaseVO extends EventDispatcher{
 	}
 
     CONFIG::Flex {
-        import mx.collections.ArrayCollection;
         public static function createVOCollection(source:Object, elementClass:Class, ignoreTransient:Boolean = true):ArrayCollection{
             return TransformerUtil.createCollectionByElementClass(source, elementClass, ignoreTransient);
         }
@@ -45,7 +50,18 @@ public class BaseVO extends EventDispatcher{
         for each (var propertyDescriptorVO:PropertyDescriptorVO in properties) {
             var propertyName:String = propertyDescriptorVO.name;
             if(propertyName in source){
-                this[propertyName] = source[propertyName];
+                CONFIG::Flex {
+                    if(this is IPropertyChangeNotifier){
+                        var oldValue:* = this[propertyName];
+                    }
+                }
+                var newValue:* = source[propertyName];
+                this[propertyName] = newValue;
+                CONFIG::Flex {
+                    if(this is IPropertyChangeNotifier){
+                        dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, propertyName, oldValue, newValue));
+                    }
+                }
             }
         }
     }

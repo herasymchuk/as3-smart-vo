@@ -16,7 +16,7 @@ import flash.utils.getQualifiedClassName;
 
 public final class TransformerUtil {
 
-	public static const PRIMITIVE_TYPES:Array = ["String", "Number", "int", "Boolean", "uint", "Class", "Function"];
+	private static const PRIMITIVE_TYPES:Array = ["String", "Number", "int", "Boolean", "uint", "Class", "Function"];
 
     private static const ARRAY_COLLECTION_TYPE:String = getArrayCollectionType();
     private static function getArrayCollectionType():String {
@@ -129,7 +129,7 @@ public final class TransformerUtil {
 	private static function getItem(source:*, propertyType:String, ignoreTransient:Boolean, collectionElementType:String = null):* {
 		var res:* = null;
 		if (source != null) {
-			if (PRIMITIVE_TYPES.indexOf(propertyType) > -1 || propertyType == UNTYPED || propertyType == OBJECT_TYPE) {
+			if (isPrimitiveType(propertyType) || propertyType == UNTYPED || propertyType == OBJECT_TYPE) {
 				res = source;
 			} else if(propertyType == DATE_TYPE) {
 				res = (dateParseFunction != null)?dateParseFunction(source):source;
@@ -146,6 +146,10 @@ public final class TransformerUtil {
 			}
 		}
 		return res;
+	}
+
+	public static function isPrimitiveType(propertyType:String):Boolean {
+		return PRIMITIVE_TYPES.indexOf(propertyType) > -1;
 	}
 
 	private static function getArray(source:*, collectionElementType:String, ignoreTransient:Boolean):Array {

@@ -20,7 +20,7 @@ public class MatchUtil extends Sprite {
             return false;
         } else if ((input is Number) && isNaN(input) && isNaN(output)) {
             return true;
-        } else if (TransformerUtil.PRIMITIVE_TYPES.indexOf(getQualifiedClassName(input)) == -1) {
+        } else if (!TransformerUtil.isPrimitiveType(getQualifiedClassName(input))) {
             return equalsObject(input, output, strict);
         }
         return false;

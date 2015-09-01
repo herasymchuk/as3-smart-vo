@@ -75,6 +75,9 @@ public class TestVO1 extends BaseVO {
 
     public var prop11:*;
 
+    [RemoteProperty(collectionElementType="int")]
+    public var prop12:ArrayCollection;
+
     [Serialized]
     public var testSerialized1:Object;
 
@@ -141,6 +144,7 @@ public class TestVO1 extends BaseVO {
         value.prop9 == prop9 &&
         value.prop10 == prop10 &&
         MatchUtil.equals(value.prop11, prop11) &&
+        MatchUtil.equals(value.prop12, prop12) &&
         dateEquals(value.prop5, prop5) &&
         collectionEquals(value.prop6, prop6) &&
         collectionEquals(value.prop7, prop7) &&

@@ -83,7 +83,7 @@ public final class ReflectionUtil {
                                 var lastDotIndex:int = metaItem.value.lastIndexOf(".");
                                 var packageName:String = metaItem.value.substring(0, lastDotIndex);
                                 var className:String = metaItem.value.substring(lastDotIndex+1);
-                                collectionElementType = packageName + "::" + className;
+                                collectionElementType = TransformerUtil.isPrimitiveType(className) ? null : (packageName + "::" + className);
                                 break;
                             case MetadataConsts.REMOTE_PROPERTY_INITIALIZER_KEY:
                                 initializer = String(metaItem.value);

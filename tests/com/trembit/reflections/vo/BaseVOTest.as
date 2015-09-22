@@ -218,14 +218,14 @@ public final class BaseVOTest {
 
     [Test]
     public function testDateParser():void{
-        var source:Object = {prop5:"Sat Nov 30 1974"};
+        var source:Object = {prop5:"1970/01/01 00:00:01 UTC", voType:"-1"};
         TransformerUtil.dateParseFunction = function(value:String):Date{return new Date(Date.parse(value));};
         var vo:TestVO1 = BaseVO.create(source, TestVO1);
         assertNotNull(vo.prop5);
-        assertEquals(vo.prop5.time, 155030400000);
+        assertEquals(vo.prop5.time, 1000);
         vo = vo.clone();
         assertNotNull(vo.prop5);
-        assertEquals(vo.prop5.time, 155030400000);
+        assertEquals(vo.prop5.time, 1000);
     }
 }
 }

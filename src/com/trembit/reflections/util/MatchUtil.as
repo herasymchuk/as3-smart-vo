@@ -27,7 +27,6 @@ public class MatchUtil extends Sprite {
     }
 
     private static function equalsObject(input:Object, output:Object, strict:Boolean):Boolean {
-        trace(ReflectionUtil.getClassByInstance(input));
         var properties:Vector.<PropertyDescriptorVO> = ReflectionUtil.getProperties(ReflectionUtil.getClassByInstance(input));
         for each(var item:PropertyDescriptorVO in properties) {
             if (item.isTransient) continue;
@@ -88,7 +87,7 @@ public class MatchUtil extends Sprite {
     }
 
 
-    private static function isVector(obj:Object):Boolean {
+    public static function isVector(obj:Object):Boolean {
         //return (getQualifiedClassName(obj).indexOf('__AS3__.vec::Vector') == 0);
         return (obj is Vector.<*>
         || obj is Vector.<Number>
